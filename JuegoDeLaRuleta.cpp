@@ -6,10 +6,13 @@
 
 //Archivos que contienen las funcionalidades por aparte
 #include "ListaDobleRuleta.hpp"
+#include "ManejoTapete.h"
 
 using namespace std;
 
 typedef char tcad[30];
+
+typedef FILE *parchivo; //Para el meno de archivos
 
 //Menu de Opciones
 void menuDeInicio(int &opcion);
@@ -17,10 +20,15 @@ void menuDeJuego(int &opcion);
 
 main()
 {
+	parchivo tapete;
 	//Para la ruleta
 	tlistaDC lista_ruleta;
 	iniciarListaDoble(lista_ruleta);
-	
+	//Para el tapete
+	tlistaS lista_tapete;
+	iniciarListaSimple(lista_tapete);
+	pnodo2 nodo_ganador;
+		
 	int opcion_inicio, opcion_juego, numero_ganador;
 	char respuesta_sentido, respuesta;
 	do
@@ -48,10 +56,26 @@ main()
 				cout << "Mostrar el contenido (Sentido Horario) de la ruleta S/N: " ;
 				cin >> respuesta;
 				if ( respuesta == 'S' || respuesta == 's' )
-					mostrar_contenido_ruleta(lista_ruleta);
+					mostrarContenidoRuleta(lista_ruleta);
 				break;
 			case 2:
-			
+				if(existeArchivoDelTapete()  == true )
+				{
+					cout << "El archivo tapete.txt ya existe." << endl;
+				}
+				else
+				{
+					crearTapete(tapete);
+					cout << "Se creo el archivo del tapete." << endl;
+				}
+				crearListaDelTapete(tapete, lista_tapete);
+				cout << "Ver el contenido del tapete (Lista) S/N: " ;
+				cin >> respuesta;
+				if(respuesta == 'S' || respuesta == 's' )
+				{
+					mostrarListaTapete(lista_tapete);	
+				}
+				cout << endl;			
 				break;
 			case 3:
 			
@@ -64,35 +88,44 @@ main()
 			
 				break;
 			case 6:
-				do
+				if( lista_ruleta.inicio != NULL && lista_tapete.inicio != NULL )
 				{
-					system("cls");
-					menuDeJuego(opcion_juego);
-					switch(opcion_juego)
+					do
 					{
-						case 1:
+						system("cls");
+						menuDeJuego(opcion_juego);
+						switch(opcion_juego)
+						{
+							case 1:
 							
-							break;
-						case 2:
+								break;
+							case 2:
 						
-							break;
-						case 3:
-							cout << "Sentido horario S/N:  ";
-							cin >> respuesta_sentido ;
-							if( respuesta_sentido == 'S' || respuesta_sentido == 's' )
-								numero_ganador = girarRuleta(lista_ruleta, true);
-							else
-								numero_ganador = girarRuleta(lista_ruleta, false);				
-							break;
-						case 4:
-							cout << "GRACIAS POR JUGAR EN EL CASINO DEL APU 2008 - VUELVA PRONTO!!!" << endl;
-							break;
-						default:				
-							cout << "OPCION INCORRECTA, intente de nuevo." << endl;			
-					}
-					if(opcion_juego != 4 ) // Se pregunta si es distinto de 4 para que no muestre 2 veces la opcion de presione una tecla.
-						system("pause");	
-				}while(opcion_juego != 4 );
+								break;
+							case 3:
+								cout << "Sentido horario S/N:  ";
+								cin >> respuesta_sentido ;
+								if( respuesta_sentido == 'S' || respuesta_sentido == 's' )
+									numero_ganador = girarRuleta(lista_ruleta, true);
+								else
+									numero_ganador = girarRuleta(lista_ruleta, false);
+									nodo_ganador = obtenerNumeroDeLaListaTapete(lista_tapete, numero_ganador);
+									mostrarNumeroDelTapete(nodo_ganador->numero);							
+								break;
+							case 4:
+								cout << "GRACIAS POR JUGAR EN EL CASINO DEL APU 2008 - VUELVA PRONTO!!!" << endl;
+								break;
+							default:				
+								cout << "OPCION INCORRECTA, intente de nuevo." << endl;			
+						}
+						if(opcion_juego != 4 ) // Se pregunta si es distinto de 4 para que no muestre 2 veces la opcion de presione una tecla.
+							system("pause");	
+					}while(opcion_juego != 4 );	
+				}
+				else
+				{
+					cout << "Asegurese de haber ingresado a las opciones 1, 2 y 3 antes." << endl;
+				}
 				break;	
 			case 7:
 				cout << "FIN DEL PROGRAMA." << endl;

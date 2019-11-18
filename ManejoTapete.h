@@ -202,7 +202,7 @@ void mostrarNumeroDelTapete(tnumero numero)
 /////Para generar el archivo tapete.txt, obtner su contenido y comprobar que existe el archivo
 
 //Comprueba si existe el archivo del tapete.
-bool ExisteArchivoDelTapete()
+bool existeArchivoDelTapete()
 {
 	bool existe = false;
 	parchivo archivo;
