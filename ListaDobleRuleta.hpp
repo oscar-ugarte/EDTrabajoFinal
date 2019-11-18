@@ -188,7 +188,7 @@ void generarRuleta(tlistaDC &lista)
 int girarRuleta(tlistaDC lista, bool horario )
 {
 	pnodo i ;
-	int numero = rand()%10, partida ;
+	int numero = rand()%200, partida ; //Entre 0 y 199.
 	cout << "Se avanzara espacios = " << numero << endl ;
 	i = lista.inicio ;
 	if( horario == true )
@@ -210,7 +210,7 @@ int girarRuleta(tlistaDC lista, bool horario )
 }
 
 //Muestra el contenido de la ruleta en el sentido normal / horario.
-void mostrar_contenido_ruleta(tlistaDC lista )
+void mostrarContenidoRuleta(tlistaDC lista )
 {
 	pnodo i ;
 	cout << "| " << lista.inicio->dato << " | " ;
