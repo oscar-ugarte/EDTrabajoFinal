@@ -4,6 +4,9 @@
 //Para limpiar la pantalla
 #include <cstdlib>
 
+//Archivos que contienen las funcionalidades por aparte
+#include "ListaDobleRuleta.hpp"
+
 using namespace std;
 
 typedef char tcad[30];
@@ -14,7 +17,12 @@ void menuDeJuego(int &opcion);
 
 main()
 {
-	int opcion_inicio, opcion_juego;
+	//Para la ruleta
+	tlistaDC lista_ruleta;
+	iniciarListaDoble(lista_ruleta);
+	
+	int opcion_inicio, opcion_juego, numero_ganador;
+	char respuesta_sentido, respuesta;
 	do
 	{
 		system("cls");	
@@ -22,7 +30,25 @@ main()
 		switch(opcion_inicio)
 		{
 			case 1:
-				
+				if(lista_ruleta.inicio == NULL )
+				{
+					generarRuleta(lista_ruleta);
+					cout << "Se creo la ruleta." << endl;
+				}
+				else
+				{
+					cout << "Crear una nueva ruleta S/N: " ;
+					cin >> respuesta;
+					if( respuesta == 'S' || respuesta == 's' )
+					{
+						generarRuleta(lista_ruleta);
+						cout << "Se creo una nueva ruleta." << endl;	
+					}
+				}
+				cout << "Mostrar el contenido (Sentido Horario) de la ruleta S/N: " ;
+				cin >> respuesta;
+				if ( respuesta == 'S' || respuesta == 's' )
+					mostrar_contenido_ruleta(lista_ruleta);
 				break;
 			case 2:
 			
@@ -51,7 +77,12 @@ main()
 						
 							break;
 						case 3:
-						
+							cout << "Sentido horario S/N:  ";
+							cin >> respuesta_sentido ;
+							if( respuesta_sentido == 'S' || respuesta_sentido == 's' )
+								numero_ganador = girarRuleta(lista_ruleta, true);
+							else
+								numero_ganador = girarRuleta(lista_ruleta, false);				
 							break;
 						case 4:
 							cout << "GRACIAS POR JUGAR EN EL CASINO DEL APU 2008 - VUELVA PRONTO!!!" << endl;
