@@ -208,3 +208,15 @@ int girarRuleta(tlistaDC lista, bool horario )
 	cout << "Resultado final: " << i->dato << endl;
 	return i->dato;
 }
+
+//Muestra el contenido de la ruleta en el sentido normal / horario.
+void mostrar_contenido_ruleta(tlistaDC lista )
+{
+	pnodo i ;
+	cout << "| " << lista.inicio->dato << " | " ;
+	for(i = lista.inicio->sig ; i != lista.inicio ; i = i->sig )
+	{
+		cout << i->dato << " | " ;
+	}
+	cout << endl;
+}

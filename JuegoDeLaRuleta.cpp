@@ -22,7 +22,7 @@ main()
 	iniciarListaDoble(lista_ruleta);
 	
 	int opcion_inicio, opcion_juego, numero_ganador;
-	char respuesta_sentido;
+	char respuesta_sentido, respuesta;
 	do
 	{
 		system("cls");	
@@ -30,7 +30,25 @@ main()
 		switch(opcion_inicio)
 		{
 			case 1:
-				generarRuleta(lista_ruleta);
+				if(lista_ruleta.inicio == NULL )
+				{
+					generarRuleta(lista_ruleta);
+					cout << "Se creo la ruleta." << endl;
+				}
+				else
+				{
+					cout << "Crear una nueva ruleta S/N: " ;
+					cin >> respuesta;
+					if( respuesta == 'S' || respuesta == 's' )
+					{
+						generarRuleta(lista_ruleta);
+						cout << "Se creo una nueva ruleta." << endl;	
+					}
+				}
+				cout << "Mostrar el contenido (Sentido Horario) de la ruleta S/N: " ;
+				cin >> respuesta;
+				if ( respuesta == 'S' || respuesta == 's' )
+					mostrar_contenido_ruleta(lista_ruleta);
 				break;
 			case 2:
 			
