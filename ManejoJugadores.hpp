@@ -99,6 +99,32 @@ void crearJugador(tjugador &j)
 	//cin >> j.ganancia;
 }
 
+//Comprueba si se a creado el archivo de jugadores
+bool existeArchivoDeJugadores()
+{
+	bool existe = false;
+	parchivo archivo;
+	archivo = fopen("jugadores.txt", "rb");
+	if( archivo != NULL )
+		existe = true;
+	fclose(archivo);
+	return existe;	
+}
+
+//Consulta si el archivo de jugadores aunque sea un jugador cargado.
+bool tieneJugadoresCargados()
+{
+	parchivo jugadores;
+	bool cargado = false;
+	tjugador jugador;
+	jugadores =fopen("jugadores.txt", "rb" ); //Se abre el archivo
+	fread(&jugador, sizeof(jugador), 1, jugadores); //Se realiza una lectura
+	if( !feof(jugadores)  ) //Se pregunta si no se llego al final. Quiere decir que por lo menos leyò un jugador.
+		cargado = true ;
+	fclose(jugadores);
+	return cargado;	
+}
+
 //Valida que el id del nuevo jugador no se repita
 bool jugadorRepetidoID(parchivo jugadores, int id)
 {
@@ -142,34 +168,37 @@ bool jugadorRepetidoNyA(parchivo jugadores, tcad nombre, tcad apellido )
 //Permite agregar uno o màs jugadores al archivo jugadores.txt
 void altaDeJugadores(parchivo &jugadores)
 {
+	//Se consulta si el archivo existe. Si no existe se crea.
+	if( existeArchivoDeJugadores() == false )
+	{
+		jugadores = fopen("jugadores.txt", "ab");
+		fclose(jugadores);	
+	}
 	tjugador nuevo_jug;
 	char resp;
 	do
 	{
-		cout << "¿Ingresar un jugador? " ;
-		cin >> resp;
-		if( resp == 'S' || resp == 's' )
+		crearJugador(nuevo_jug);
+		if( jugadorRepetidoID( jugadores, nuevo_jug.id_jugador ) == false  )
 		{
-			crearJugador(nuevo_jug);
-			if( jugadorRepetidoID( jugadores, nuevo_jug.id_jugador ) == false  )
+			if( jugadorRepetidoNyA(jugadores, nuevo_jug.nombre, nuevo_jug.apellido) == false )
 			{
-				if( jugadorRepetidoNyA(jugadores, nuevo_jug.nombre, nuevo_jug.apellido) == false )
-				{
-					//Si el jugador no se repite recien se abre, se agrega y cierra el archivo. Por conflicto con los validadores anteriores 
-					jugadores = fopen("jugadores.txt", "ab");
-					fwrite(&nuevo_jug, sizeof(nuevo_jug), 1, jugadores );
-					fclose(jugadores);	
-				}
-				else
-				{
-					cout << "Nombre y apellido del jugador repetido." << endl;
-				}
+				//Si el jugador no se repite recien se abre, se agrega y cierra el archivo. Por conflicto con los validadores anteriores 
+				jugadores = fopen("jugadores.txt", "ab");
+				fwrite(&nuevo_jug, sizeof(nuevo_jug), 1, jugadores );
+				fclose(jugadores);	
 			}
 			else
 			{
-				cout << "ID del jugador repetido." << endl;
-			}	
+				cout << "Nombre y apellido del jugador repetido." << endl;
+			}
 		}
+		else
+		{
+			cout << "ID del jugador repetido." << endl;
+		}	
+	cout << "¿Ingresar otro jugador? " ;
+	cin >> resp;	
 	}while( resp == 'S' || resp == 's' );
 }
 
@@ -283,32 +312,6 @@ void actualizarDineroDelJugador(parchivo &jugadores, int id, double monto, doubl
 		fwrite(&jugador, sizeof(jugador), 1, jugadores);
 	}
 	fclose(jugadores);	
-}
-
-//Comprueba si se a creado el archivo de jugadores
-bool existeArchivoDeJugadores()
-{
-	bool existe = false;
-	parchivo archivo;
-	archivo = fopen("jugadores.txt", "rb");
-	if( archivo != NULL )
-		existe = true;
-	fclose(archivo);
-	return existe;	
-}
-
-//Consulta si el archivo de jugadores aunque sea un jugador cargado.
-bool tieneJugadoresCargados()
-{
-	parchivo jugadores;
-	bool cargado = false;
-	tjugador jugador;
-	jugadores =fopen("jugadores.txt", "rb" ); //Se abre el archivo
-	fread(&jugador, sizeof(jugador), 1, jugadores); //Se realiza una lectura
-	if( !feof(jugadores)  ) //Se pregunta si no se llego al final. Quiere decir que por lo menos leyò un jugador.
-		cargado = true ;
-	fclose(jugadores);
-	return cargado;	
 }
 
 /////Procedimientos y funciones para el manejo del arbol de jugadores
