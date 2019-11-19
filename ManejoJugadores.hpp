@@ -237,8 +237,8 @@ void modificarMontoDelJugador(parchivo &jugadores, int id)
 		fread(&jugador, sizeof(jugador), 1, jugadores);
 		if(jugador.id_jugador == id);
 		{
-			cout << "Jugador elegido: " << endl;
-			mostrarJugador(jugador);
+			//cout << "Jugador elegido: " << endl;
+			//mostrarJugador(jugador);
 			encontrado = true;
 		}
 	}
@@ -295,6 +295,20 @@ bool existeArchivoDeJugadores()
 		existe = true;
 	fclose(archivo);
 	return existe;	
+}
+
+//Consulta si el archivo de jugadores aunque sea un jugador cargado.
+bool tieneJugadoresCargados()
+{
+	parchivo jugadores;
+	bool cargado = false;
+	tjugador jugador;
+	jugadores =fopen("jugadores.txt", "rb" ); //Se abre el archivo
+	fread(&jugador, sizeof(jugador), 1, jugadores); //Se realiza una lectura
+	if( !feof(jugadores)  ) //Se pregunta si no se llego al final. Quiere decir que por lo menos leyò un jugador.
+		cargado = true ;
+	fclose(jugadores);
+	return cargado;	
 }
 
 /////Procedimientos y funciones para el manejo del arbol de jugadores
