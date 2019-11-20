@@ -7,10 +7,9 @@
 //Archivos que contienen las funcionalidades por aparte
 #include "ListaDobleRuleta.hpp"
 #include "ManejoTapete.h"
+#include "ManejoJugadores.hpp"
 
 using namespace std;
-
-typedef char tcad[30];
 
 typedef FILE *parchivo; //Para el meno de archivos
 
@@ -20,16 +19,23 @@ void menuDeJuego(int &opcion);
 
 main()
 {
-	parchivo tapete;
+	parchivo tapete, jugadores;
+	
 	//Para la ruleta
 	tlistaDC lista_ruleta;
 	iniciarListaDoble(lista_ruleta);
+	
 	//Para el tapete
 	tlistaS lista_tapete;
 	iniciarListaSimple(lista_tapete);
 	pnodo2 nodo_ganador;
-		
-	int opcion_inicio, opcion_juego, numero_ganador;
+	//Para los jugadores	
+	pnodo3 arbol_jugadores;
+	iniciarArbol(arbol_jugadores);
+	tjugador jugador;
+	tcad nombre_buscado, apellido_buscado ;
+	
+	int opcion_inicio, opcion_juego, numero_ganador, id_buscado;
 	char respuesta_sentido, respuesta;
 	do
 	{
@@ -78,14 +84,84 @@ main()
 				cout << endl;			
 				break;
 			case 3:
-			
+				altaDeJugadores(jugadores);
 				break;	
 			case 4:
-			
-				break;
-				
+				//Se pregunta si existe el archivo jugadores.txt para que no de error
+				if( existeArchivoDeJugadores() == false )
+				{
+					cout << "El archivo de jugadores no existe. Acceda primero a la opcion 3 y cargue jugadores." << endl;
+				}
+				else
+				{
+					if( tieneJugadoresCargados() == true )
+					{
+						cout << "Consultar jugador por ID(I) o Nombre y Apellido(N): ";
+						cin >> respuesta;
+						if( respuesta == 'I' || respuesta == 'i' )
+						{
+							cout << "Ingrese ID para buscar: " ;
+							cin >> id_buscado;
+							jugador = obtenerJugadorPorID(jugadores, id_buscado);
+						}
+						else
+						{
+							fflush( stdin );
+							cout << "Ingrese nombre: " ;
+							gets(nombre_buscado);
+							fflush( stdin );
+							cout << "Ingrese apellido: " ;
+							gets(apellido_buscado);
+							fflush( stdin );
+							jugador = obtenerJugadorPorNyA(jugadores, nombre_buscado, apellido_buscado);					
+						}
+						//Si el jugador obtenido tiene un id = -1 quiere decir que no lo encontro.
+						if( jugador.id_jugador == -1 )
+							cout << "Jugador no encontrado." << endl;
+						else
+						{
+							cout << "Jugador Encontrado:" << endl;
+							mostrarJugador(jugador);
+							cout << "Cambiar monto del jugador S/N: " ;
+							cin >> respuesta ;
+							if( respuesta == 'S' || respuesta == 's' )
+								modificarMontoDelJugador(jugadores, jugador.id_jugador);
+						}	
+					}
+					else
+					{
+						cout << "No hay jugadores cargados para consultar. Elija la opcion 3 y cargue jugadores para consultar." << endl;
+					}	
+				}
+				break;				
 			case 5:
-			
+				//Se pregunta si existe el archivo jugadores.txt para que no de error
+				if( existeArchivoDeJugadores() == false )
+				{
+					cout << "El archivo de jugadores no existe. Acceda primero a la opcion 3 y cargue jugadores." << endl;
+				}
+				else
+				{
+					//Se pregunta si tiene jugadores cargados.
+					if( tieneJugadoresCargados() == true )
+					{
+						//Si ya existe un arbol creado se vaciara y volvera a crear para actualizar los datos.
+						if( arbol_jugadores != NULL )
+						{
+							vaciarArbolDeJugadores(jugadores, arbol_jugadores);
+							crearArbolDeJugadores(jugadores, arbol_jugadores);
+						}
+						else
+						{
+							crearArbolDeJugadores(jugadores, arbol_jugadores);
+						}
+						recorrerOrdenDecreciente(arbol_jugadores); //Entonces se muestra el contenido.	
+					}
+					else
+					{
+						cout << "No hay jugadores cargados. Elija la opcion 3 y cargue jugadores." << endl;
+					}
+				}			
 				break;
 			case 6:
 				if( lista_ruleta.inicio != NULL && lista_tapete.inicio != NULL )
