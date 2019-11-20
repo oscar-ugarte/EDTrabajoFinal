@@ -16,9 +16,9 @@ typedef struct tnumero
 	int cifra;
 	char color; // r = rojo y n = negro
 	char paridad; // par = p y impar i
-	int docena ; 
-	int columna ;
-	int mitad;
+	char docena ; 
+	char columna ;
+	char mitad;
 };
 
 typedef struct tnodo2 *pnodo2;
@@ -111,19 +111,19 @@ pnodo2 obtenerNumeroDeLaListaTapete(tlistaS lista, int buscado)
 /////Procedimientos y funciones generar el numero y mostrar el contenido de uno.
 
 //Obtiene la docena a la que pertenece el numero
-int obtenerDocena(int cifra)
+char obtenerDocena(int cifra)
 {
 	if(cifra >= 1 && cifra <= 12)
-		return 1;
+		return 'P';
 	else
 	{
 		if(cifra >= 13 && cifra <= 24)
 		{
-			return 2;
+			return 'S';
 		}
 		else
 		{
-			return 3;
+			return 'T';
 		}		
 	}	
 }
@@ -142,16 +142,16 @@ bool comprobarColumna(int num_partida, int cifra)
 }
 
 //Obtiene la columna a la que pertenece la cifra
-int obtenerColumna(int cifra)
+char obtenerColumna(int cifra)
 {
 	if( comprobarColumna(1, cifra) == true ) //Para la primera columna
-		return 1;
+		return 'P';
 	else
 	{
 		if( comprobarColumna(2, cifra) == true ) //Para la segunda columna
-			return 2 ;
+			return 'S' ;
 		else
-			return 3 ; //Si no pertenece a las anteriores pertenece a las tercera.
+			return 'T' ; //Si no pertenece a las anteriores pertenece a las tercera.
 	}	
 }
 
@@ -161,29 +161,29 @@ void generarNumeroDelTapete(tnumero &numero, int cifra)
 	if( cifra == 0 )
 	{
 		numero.cifra = cifra;
-		numero.color = 'c';
-		numero.paridad = 'c';
-		numero.docena = 0;
-		numero.mitad = 0;
-		numero.columna = 0;
+		numero.color = 'C';
+		numero.paridad = 'C';
+		numero.docena = 'C';
+		numero.mitad = 'C';
+		numero.columna = 'C';
 	}
 	else
 	{
 		numero.cifra = cifra;
 		if( cifra % 2 == 0 )
-			numero.paridad = 'p';
+			numero.paridad = 'P';
 		else
-			numero.paridad = 'i';
-		if( numero.paridad == 'p' )
-			numero.color = 'n';
+			numero.paridad = 'I';
+		if( numero.paridad == 'P' )
+			numero.color = 'N';
 		else
-			numero.color = 'r';
+			numero.color = 'R';
 		numero.docena = obtenerDocena(cifra);
 		numero.columna = obtenerColumna(cifra);
 		if( cifra <= 18 )
-			numero.mitad = 1;
+			numero.mitad = 'P';
 		else				
-			numero.mitad = 2;
+			numero.mitad = 'S';
 	}
 }
 
